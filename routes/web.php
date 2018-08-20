@@ -12,8 +12,11 @@
 */
 
 Auth::routes();
-Route::get('login/facebook', 'Auth\LoginController@redirectToProvider');
+Route::name('login.with.facebook')->get('login/facebook', 'Auth\LoginController@redirectToProvider');
 Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback');
 
-
 Route::get('/', 'HomeController@index')->name('home');
+Route::resources([
+    '/products' => 'ProductController',
+    '/reviews' => 'ReviewController'
+]);

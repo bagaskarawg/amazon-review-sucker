@@ -76,10 +76,15 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-8 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Register') }}
                                 </button>
+
+                                <a href="{{ route('login.with.facebook') }}" class="btn btn-info">
+                                    <i class="fab fa-facebook-f"></i>
+                                    {{ __('Register with Facebook') }}
+                                </a>
                             </div>
                         </div>
                     </form>

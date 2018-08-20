@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Horizon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Horizon::routeMailNotificationsTo('bagaswisnu07@gmail.com');
+        Horizon::auth(function ($request) {
+            return auth()->check() && $request->user()->is_admin;
+        });
     }
 
     /**

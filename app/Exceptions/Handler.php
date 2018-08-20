@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException as HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof HttpException){
+            if($request->is('horizon*')) return redirect('/');
+        }
+
         return parent::render($request, $exception);
     }
 }
