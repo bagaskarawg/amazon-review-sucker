@@ -4,10 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+            <div class="panel">
+                <div class="panel-header">
+                    <h4 class="panel-heading">{{ __('Register') }}</h4>
+                </div>
 
-                <div class="card-body">
+                <div class="panel-body">
                     <form method="POST" action="{{ route('register') }}" aria-label="{{ __('Register') }}">
                         @csrf
 

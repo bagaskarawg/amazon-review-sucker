@@ -4,10 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+            <div class="panel">
+                <div class="panel-header">
+                    <h4 class="panel-heading">{{ __('Reset Password') }}</h4>
+                </div>
 
-                <div class="card-body">
+                <div class="panel-body">
                     <form method="POST" action="{{ route('password.request') }}" aria-label="{{ __('Reset Password') }}">
                         @csrf
 

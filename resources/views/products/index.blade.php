@@ -20,8 +20,8 @@
                     <tbody>
                         @foreach($products as $i => $product)
                             <tr>
-                                <td>{{ ((request()->page - 1) * 10) + ($i + 1) }}</td>
-                                <td>{{ $product->asin }}</td>
+                                <td>{{ (((request()->page ?? 1) - 1) * 10) + ($i + 1) }}</td>
+                                <td><a href="{{ route('products.show', $product) }}">{{ $product->asin }}</a></td>
                                 <td>{{ ucwords(implode(explode('_', $product->state), ' ')) }}</td>
                                 <td>{{ $product->reviews_count }}</td>
                             </tr>
