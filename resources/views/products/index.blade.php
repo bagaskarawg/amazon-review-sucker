@@ -6,7 +6,10 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">{{ __('Products') }}</h4>
+                    <h4 class="panel-title">
+                        {{ __('Products') }}
+                        <a href="{{ route('products.create') }}" class="btn btn-primary pull-right">{{ __('Create Product') }}</a>
+                    </h4>
                 </div>
                 <table class="table">
                     <thead>

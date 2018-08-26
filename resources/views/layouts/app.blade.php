@@ -33,8 +33,8 @@
                 </div>
                 @auth
                     <ul class="nav navbar-nav">
-                    <li><a class="nav-link" href="{{ route('products.index') }}">{{ __('Products') }}</a></li>
-                        <li><a class="nav-link" href="#">{{ __('Reviews') }}</a></li>
+                        <li><a class="nav-link" href="{{ route('products.index') }}">{{ __('Products') }}</a></li>
+                        <li><a class="nav-link" href="{{ route('reviews.index') }}">{{ __('Reviews') }}</a></li>
                         <li><a class="nav-link" href="#">{{ __('Summary') }}</a></li>
                     </ul>
                 @endauth

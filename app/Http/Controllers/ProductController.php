@@ -39,7 +39,11 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::withCount('reviews')->findOrFail($id);
+        $product = Product::withCount('reviews')->with([
+            'reviews' => function ($query) {
+                $query->orderBy('review_date', 'DESC')->paginate(10);
+            }
+        ])->findOrFail($id);
         return view('products.show', compact('product'));
     }
 }

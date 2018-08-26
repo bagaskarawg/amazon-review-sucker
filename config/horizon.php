@@ -78,6 +78,7 @@ return [
                 'balance' => 'simple',
                 'processes' => 10,
                 'tries' => 3,
+                'timeout' => 1140,
             ],
             'supervisor-2' => [
                 'connection' => 'redis',
@@ -85,6 +86,7 @@ return [
                 'balance' => 'simple',
                 'processes' => 10,
                 'tries' => 3,
+                'timeout' => 1140,
             ],
             'supervisor-3' => [
                 'connection' => 'redis',
@@ -92,6 +94,7 @@ return [
                 'balance' => 'simple',
                 'processes' => 10,
                 'tries' => 3,
+                'timeout' => 1140,
             ],
         ],
 
@@ -102,6 +105,7 @@ return [
                 'balance' => 'simple',
                 'processes' => 3,
                 'tries' => 3,
+                'timeout' => 1140,
             ],
         ],
     ],
