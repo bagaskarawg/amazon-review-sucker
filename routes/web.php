@@ -16,7 +16,9 @@ Route::name('login.with.facebook')->get('login/facebook', 'Auth\LoginController@
 Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback');
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::resources([
-    '/products' => 'ProductController',
-    '/reviews' => 'ReviewController'
-]);
+Route::group(['middleware' => 'auth'], function() {
+    Route::resources([
+        '/products' => 'ProductController',
+        '/reviews' => 'ReviewController'
+    ]);
+});

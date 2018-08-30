@@ -21,6 +21,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    @yield('custom-css')
 </head>
 <body>
     <div id="app">

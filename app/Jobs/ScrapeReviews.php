@@ -45,30 +45,59 @@ class ScrapeReviews implements ShouldQueue
         for ($i = 1; $i <= $maxPage; $i++) {
             $crawl = $client->request('GET', "https://www.amazon.com/product-reviews/{$product->asin}?sortBy=recent&reviewerType=all_reviews&formatType=all_formats&pageNumber={$i}");
             $data = $crawl->filter('.review-views .review')->each(function($node) {
-                $review_link = $node->filter('a.review-title')->count() > 0 ? $node->filter('a.review-title')->link()->getUri() : '';
+                $reviewLink = $node->filter('a.review-title')->count() > 0 ? $node->filter('a.review-title')->link()->getUri() : '';
                 $title = $node->filter('a.review-title')->count() > 0 ? $node->filter('a.review-title')->text() : '';
-                $score = $node->filter('.review-rating')->count() > 0 ? +str_replace(' out of 5 stars', '', $node->filter('.review-rating')->text()) : '';
-                $body = $node->filter('.review-text')->count() > 0 ? $node->filter('.review-text')->html() : '';
-                $review_date = Carbon::parse($node->filter('.review-date')->count() > 0 ? str_replace('on ', '', $node->filter('.review-date')->text()) : '');
-                $author = $node->filter('a.author')->count() > 0 ? $node->filter('a.author')->text() : 'A customer';
-                $author_link = $node->filter('a.author')->count() > 0 ? $node->filter('a.author')->link()->getUri() : '';
-                $number_of_comments = $node->filter('.review-comment-total')->text();
-                $has_photo = $node->filter('.review-image-container')->count() > 0;
-                $has_video = $node->filter('.video-block')->count() > 0;
-                $verified = $node->filter('.review-data.review-format-strip > span.a-declarative')->count() > 0 && $node->filter('.review-data.review-format-strip > span.a-declarative')->text() == 'Verified Purchase';
+                $score = $node->filter('.review-rating')->count() > 0 ? +str_replace(' out of 5 stars', '', $node->filter('.review-rating')->text()) : 0;
+                $body = $node->filter('.review-text')->count() ? $node->filter('.review-text')->html() : '';
+                $reviewDate = $node->filter('.review-date')->count() > 0 ? Carbon::parse(str_replace('on ', '', $node->filter('.review-date')->text())) : '';
+
+                $authorDom = $node->filter('a.author');
+                $author = 'A customer';
+                $authorLink = null;
+                if ($authorDom->count() > 0) {
+                    $author = $authorDom->text();
+                    $authorLink = $authorDom->link()->getUri();
+                }
+
+                $commentDom = $node->filter('.review-comment-total');
+                $numberOfComments = $commentDom->count() ? $commentDom->text() : 0;
+
+                $hasPhoto = $node->filter('.review-image-container')->count() > 0;
+                $hasVideo = $node->filter('.video-block')->count() > 0;
+
+                $verifiedDom = $node->filter('.review-data.review-format-strip > span.a-declarative');
+                $verified = $verifiedDom->count() > 0 && $verifiedDom->text() == 'Verified Purchase';
+
+                $childAsin = null;
+                $childName = null;
+                $childNameNode = $node->filter('.review-data.review-format-strip > a.a-link-normal');
+                if ($childNameNode->count() > 0) {
+                    $childAsin = explode('/', $childNameNode->link()->getUri())[5] ?? '';
+                    $childName = $childNameNode->html();
+                }
+
+                $helpfulVotesCount = 0;
+                $helpfulCountDom = $node->filter('.cr-vote .cr-vote-text');
+                if ($helpfulCountDom->count() > 0) {
+                    $helpfulVotesCount = explode(' ', $helpfulCountDom->text())[0] ?? 0;
+                    if (strtolower($helpfulVotesCount) == 'one') $helpfulVotesCount = 1;
+                }
 
                 return [
-                    'review_link' => $review_link,
-                    'title' => $title,
+                    'child_asin' => $childAsin,
+                    'child_name' => substr($childName, 0, 255),
+                    'review_link' => $reviewLink,
+                    'title' => substr($title, 0, 255),
                     'score' => $score,
                     'body' => $body,
-                    'review_date' => $review_date,
-                    'author' => $author,
-                    'author_link' => $author_link,
-                    'number_of_comments' => $number_of_comments,
-                    'has_photo' => $has_photo,
-                    'has_video' => $has_video,
+                    'review_date' => $reviewDate,
+                    'author' => substr($author, 0, 255),
+                    'author_link' => $authorLink,
+                    'number_of_comments' => $numberOfComments,
+                    'has_photo' => $hasPhoto,
+                    'has_video' => $hasVideo,
                     'verified' => $verified,
+                    'helpful_votes_count' => $helpfulVotesCount
                 ];
             });
 

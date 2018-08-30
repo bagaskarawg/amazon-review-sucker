@@ -11,7 +11,7 @@
                         <a href="{{ route('products.create') }}" class="btn btn-primary pull-right">{{ __('Create Product') }}</a>
                     </h4>
                 </div>
-                <table class="table">
+                <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>#</th>

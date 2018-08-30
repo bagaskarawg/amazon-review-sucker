@@ -22,7 +22,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'asin' => 'required|unique:products,asin',
+            // 'asin' => 'required|unique:products,asin',
         ]);
 
         $product = new Product;
