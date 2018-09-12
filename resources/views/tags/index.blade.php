@@ -9,14 +9,18 @@
                     <h4 class="panel-title">{{ __('Tags') }}</h4>
                 </div>
                 <ul class="list-group">
-                    @foreach($tags as $i => $tag)
-                        <li class="list-group-item">
-                            <span class="badge">{{ $tag->reviews_count }}</span>
-                            <a href="{{ route('tags.show', $tag->id) }}">
-                                {{ $tag->name }}
-                            </a>
-                        </li>
-                    @endforeach
+                    @if($tags->count() > 0)
+                        @foreach($tags as $i => $tag)
+                            <li class="list-group-item">
+                                <span class="badge">{{ $tag->reviews_count }}</span>
+                                <a href="{{ route('tags.show', $tag->id) }}">
+                                    {{ $tag->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    @else
+                        <li class="list-group-item">No tags to be displayed.</li>
+                    @endif
                 </ul>
             </div>
             {!! $tags->links() !!}

@@ -16,7 +16,7 @@ class Tag extends Model
         return $this->morphedByMany('App\Models\Review', 'taggable');
     }
 
-    public function scopeContaining(Builder $query, string $name, $locale = null)
+    public function scopeContaining($query, string $name, $locale = null)
     {
         $locale = $locale ?? app()->getLocale();
 
