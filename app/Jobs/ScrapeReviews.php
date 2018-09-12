@@ -40,7 +40,7 @@ class ScrapeReviews implements ShouldQueue
 
         $client = app()->scrapper;
         $getPagination = $client->request('GET', "https://www.amazon.com/product-reviews/{$product->asin}");
-        $maxPage = $getPagination->filter('ul.a-pagination .page-button')->last()->text();
+        $maxPage = $getPagination->filter('ul.a-pagination .page-button')->count() > 0 ? $getPagination->filter('ul.a-pagination .page-button')->last()->text() : 1;
 
         for ($i = 1; $i <= $maxPage; $i++) {
             $crawl = $client->request('GET', "https://www.amazon.com/product-reviews/{$product->asin}?sortBy=recent&reviewerType=all_reviews&formatType=all_formats&pageNumber={$i}");
