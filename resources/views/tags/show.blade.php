@@ -1,47 +1,14 @@
 @extends('layouts.app')
 
 @section('custom-css')
-<style>
-.a-icon.a-icon-text-separator:before {
-    content: ' | ';
-}
-</style>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('custom-js')
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.js"></script>
 <script>
     $(document).ready(function() {
-        $('.tags').select2({
-            tokenSeparator: [','],
-            tags: true,
-            multiple: true,
-            placeholder: "Enter tags ...",
-            ajax: { url: '/search_tags', dataType: 'json', cache: true }
-        });
-
-        $('.tags').on('select2:select', function(event) {
-            var reviewId = $(this).attr('data-review-id');
-            $.ajax('/reviews/' + reviewId + '/tags', {
-                method: 'POST',
-                data: {
-                    tag: event.params.data.id
-                }
-            });
-        });
-
-        $('.tags').on('select2:unselect', function(event) {
-            var reviewId = $(this).attr('data-review-id');
-            $.ajax('/reviews/' + reviewId + '/tags', {
-                method: 'DELETE',
-                data: {
-                    tag: event.params.data.id
-                }
-            });
-        });
+        $('.tags').select2();
     });
 </script>
 @endsection
@@ -52,9 +19,12 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">{{ __('Reviews') }}</h4>
+                    <h4 class="panel-title">
+                        {{ __('Tag') }} <b><i>{{ $tag->name }}</i></b>
+                        <span class="badge">{{ $tag->reviews_count }}</span>
+                    </h4>
                 </div>
-                @foreach($reviews as $i => $review)
+                @foreach($reviews as $review)
                     <div class="media">
                         <div class="media-body" style="border-radius: 10px 0 0 0;padding:10px; border: 1px solid rgba(0, 0, 0, .4);">
                             <h5 class="media-heading"><a href="{{ $review->review_link }}" target="_blank" style="text-decoration: none">{{ $review->title }}</a></h5>
@@ -80,15 +50,15 @@
                     </div>
                     <div style="border-radius: 0 0 10px 10px;margin-bottom: 10px;padding:10px; border: 1px solid rgba(0, 0, 0, .4);">
                         Tags:
-                        <select class="tags form-control" data-review-id="{{ $review->id }}" multiple="">
+                        <select class="tags form-control" data-review-id="{{ $review->id }}" multiple="" disabled="">
                             @foreach($review->tags->pluck('name') as $tag)
                                 <option value="{{ $tag }}" selected="selected">{{ $tag }}</option>
                             @endforeach
                         </select>
                     </div>
                 @endforeach
+                {!! $reviews->render() !!}
             </div>
-            {!! $reviews->links() !!}
         </div>
     </div>
 </div>

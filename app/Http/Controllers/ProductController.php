@@ -43,7 +43,7 @@ class ProductController extends Controller
     {
         $product = Product::withCount('reviews')->findOrFail($id);
         $variants = Review::where('product_id', $id)->whereRaw("child_name != '' AND child_name IS NOT NULL")->groupBy(['child_name', 'child_asin'])->get(['child_name', 'child_asin']);
-        $query = Review::where('product_id', $id)->orderBy('review_date', 'DESC');
+        $query = Review::with('tags')->where('product_id', $id)->orderBy('review_date', 'DESC');
         if ($request->has('only_verified') && $request->only_verified == '1') {
             $query = $query->where('verified', 1);
         }

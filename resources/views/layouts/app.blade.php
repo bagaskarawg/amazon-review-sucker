@@ -32,6 +32,7 @@
                     <ul class="nav navbar-nav">
                         <li><a class="nav-link" href="{{ route('products.index') }}">{{ __('Products') }}</a></li>
                         <li><a class="nav-link" href="{{ route('reviews.index') }}">{{ __('Reviews') }}</a></li>
+                        <li><a class="nav-link" href="{{ route('tags.index') }}">{{ __('Tags') }}</a></li>
                     </ul>
                 @endauth
                 <ul class="nav navbar-nav navbar-right">
@@ -67,6 +68,13 @@
     <!-- Scripts -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     @yield('custom-js')
 </body>
 </html>

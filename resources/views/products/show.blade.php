@@ -10,10 +10,43 @@
 }
 </style>
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('custom-js')
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.tags').select2({
+            tokenSeparator: [','],
+            tags: true,
+            multiple: true,
+            placeholder: "Enter tags ...",
+            ajax: { url: '/search_tags', dataType: 'json', cache: true }
+        });
+
+        $('.tags').on('select2:select', function(event) {
+            var reviewId = $(this).attr('data-review-id');
+            $.ajax('/reviews/' + reviewId + '/tags', {
+                method: 'POST',
+                data: {
+                    tag: event.params.data.id
+                }
+            });
+        });
+
+        $('.tags').on('select2:unselect', function(event) {
+            var reviewId = $(this).attr('data-review-id');
+            $.ajax('/reviews/' + reviewId + '/tags', {
+                method: 'DELETE',
+                data: {
+                    tag: event.params.data.id
+                }
+            });
+        });
+    });
+</script>
 @endsection
 
 @section('content')
@@ -135,13 +168,13 @@
                     </div>
                     @foreach($reviews as $i => $review)
                         <div class="media">
-                            <div class="media-body" style="border-radius: 10px 0 0 10px;padding:10px; border: 1px solid rgba(0, 0, 0, .4);">
+                            <div class="media-body" style="border-radius: 10px 0 0 0;padding:10px; border: 1px solid rgba(0, 0, 0, .4);">
                                 <h5 class="media-heading"><a href="{{ $review->review_link }}" target="_blank" style="text-decoration: none">{{ $review->title }}</a></h5>
                                 <div><a href="https://www.amazon.com/dp/{{ $review->child_asin }}" target="_blank" style="color: grey;">{!! $review->child_name !!}</a></div>
                                 <hr style="margin: 5px" />
                                 {!! $review->body !!}
                             </div>
-                            <div class="media-right" style="border-radius: 0 10px 10px 0;padding:10px; border: 1px solid rgba(0, 0, 0, .4);border-left: none; width: 175px;">
+                            <div class="media-right" style="border-radius: 0 10px 0 0;padding:10px; border: 1px solid rgba(0, 0, 0, .4);border-left: none; width: 175px;">
                                 @for($i = 1; $i <= $review->score; $i++)
                                     <i class="fa fa-star" style="color: gold"></i>
                                 @endfor
@@ -155,6 +188,14 @@
                                 <hr style="margin: 5px" />
                                 <div><a href="{{ route('reviews.show', $review) }}">Review Detail</a></div>
                             </div>
+                        </div>
+                        <div style="border-radius: 0 0 10px 10px;margin-bottom: 10px;padding:10px; border: 1px solid rgba(0, 0, 0, .4);">
+                            Tags:
+                            <select class="tags form-control" data-review-id="{{ $review->id }}" multiple="">
+                                @foreach($review->tags->pluck('name') as $tag)
+                                    <option value="{{ $tag }}" selected="selected">{{ $tag }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     @endforeach
                 </div>

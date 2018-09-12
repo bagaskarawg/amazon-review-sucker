@@ -19,6 +19,11 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::group(['middleware' => 'auth'], function() {
     Route::resources([
         '/products' => 'ProductController',
-        '/reviews' => 'ReviewController'
+        '/reviews' => 'ReviewController',
+        '/tags' => 'TagController'
     ]);
+
+    Route::get('search_tags', 'TagController@search');
+    Route::post('reviews/{id}/tags', 'ReviewController@attachTag')->name('attach_tag');
+    Route::delete('reviews/{id}/tags', 'ReviewController@detachTag')->name('detach_tag');
 });
