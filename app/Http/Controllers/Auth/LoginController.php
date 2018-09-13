@@ -66,15 +66,15 @@ class LoginController extends Controller
 
             if (!$user) {
                 $user = new User;
+                $user->name = $provider_user->name;
+                $user->username = $provider_user->id;
+                $user->email = $provider_user->email;
+                // set default password to fb_id
+                $user->password = bcrypt($provider_user->id);
+                $user->is_admin = false;
             }
-
-            $user->name = $provider_user->name;
-            $user->username = $provider_user->id;
-            $user->email = $provider_user->email;
-            // set default password to fb_id
-            $user->password = bcrypt($provider_user->id);
+            
             $user->facebook_id = $provider_user->id;
-            $user->is_admin = false;
             $user->save();
         }
 
