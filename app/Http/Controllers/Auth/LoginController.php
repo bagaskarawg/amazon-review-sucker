@@ -61,7 +61,13 @@ class LoginController extends Controller
                     ->first();
 
         if (!$user) {
-            $user = new User;
+            // search for existing user with provider email
+            $user = User::where('email', $provider_user->email)->first();
+
+            if (!$user) {
+                $user = new User;
+            }
+
             $user->name = $provider_user->name;
             $user->username = $provider_user->id;
             $user->email = $provider_user->email;
