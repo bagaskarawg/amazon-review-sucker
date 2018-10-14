@@ -199,7 +199,7 @@
                         </div>
                     @endforeach
                 </div>
-                {!! $reviews->links() !!}
+                {!! $reviews->appends(request()->except('page'))->links() !!}
             </div>
         @endif
     </div>
